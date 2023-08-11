@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* ljkj */
+
+
+    .heading{
+        background-clip:  rgb(238, 44, 44);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
