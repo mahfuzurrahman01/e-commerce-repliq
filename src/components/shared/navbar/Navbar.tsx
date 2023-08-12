@@ -35,15 +35,21 @@ const Navbar = () => {
 
         <Link
           className="hover:text-red-900 text-gray-500 duration-300 hover:font-semibold"
-          href="/story"
+          href="/products"
         >
-          Our story
+          Products
         </Link>
         <Link
           className="hover:text-red-900 text-gray-500 duration-300 hover:font-semibold"
           href="/blog"
         >
-          Blogs
+          About us
+        </Link>
+        <Link
+          className="hover:text-red-900 bg-red-900 px-2 py-1 hover:bg-white text-gray-200 duration-300 hover:font-semibold"
+          href="/auth/register"
+        >
+         Register
         </Link>
       </div>
       {/* navbar tab div for mobile */}
@@ -72,25 +78,25 @@ const Navbar = () => {
           Home
         </Link>
         <Link
-          href="/causes"
+          href="/products"
           className="border-b p-1 text-center hover:bg-gray-300 hover:text-red-900 hover:border-none rounded-md duration-300"
           onClick={() => setMenuToggle(false)}
         >
-          Causes
+          Products
         </Link>
         <Link
-          href="/story"
+          href="/about"
           className="border-b p-1 text-center hover:bg-gray-300 hover:text-red-900 hover:border-none rounded-md duration-300"
           onClick={() => setMenuToggle(false)}
         >
-          Our story
+         About Us
         </Link>
         <Link
-          href="/blog"
+          href="/auth/register"
           className="border-b p-1 text-center hover:bg-gray-300 hover:text-red-900 hover:border-none rounded-md duration-300"
           onClick={() => setMenuToggle(false)}
         >
-          Blogs
+          Register
         </Link>
       </div>
     </div>

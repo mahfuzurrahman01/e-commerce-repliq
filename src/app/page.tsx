@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 /* eslint-disable react/no-unescaped-entities */
 import Navbar from "@/components/shared/navbar/Navbar";
@@ -5,8 +7,29 @@ import Image from "next/image";
 import headerImage from "../../public/header.jpg";
 import { motion } from "framer-motion";
 import Card from "@/components/category-card/Card";
-
+import Products from "@/components/Products-group/Products";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { IProduct } from "@/Types/products.type";
 const page = () => {
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/products?limit=6"
+      );
+      console.log(response);
+      if (response?.data.length > 0) {
+        setProducts(response?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
   return (
     <div>
       <div className="flex justify-center items-center">
@@ -26,7 +49,11 @@ const page = () => {
             transition={{ duration: 0.5 }}
             className="text-3xl text-gray-400"
           >
-            Discover the <span className="text-red-900 uppercase font-bold"> ultimate e-commerce</span>
+            Discover the{" "}
+            <span className="text-red-900 uppercase font-bold">
+              {" "}
+              ultimate e-commerce
+            </span>
           </motion.h1>
 
           <motion.p
@@ -35,10 +62,9 @@ const page = () => {
             transition={{ duration: 0.7, delay: 0.5 }}
             className="text-gray-900 w-11/12"
           >
-             best deal of the season! Unleash a
-            shopping frenzy with our exclusive offer that combines unbeatable
-            discounts and unparalleled quality. Whether you're seeking
-            fashion-forward apparel.
+            best deal of the season! Unleash a shopping frenzy with our
+            exclusive offer that combines unbeatable discounts and unparalleled
+            quality. Whether you're seeking fashion-forward apparel.
           </motion.p>
           <motion.button
             initial={{ opacity: 0, scale: 0.5 }}
@@ -59,7 +85,32 @@ const page = () => {
         </div>
       </div>
       <div>
-        <Card/>
+        <Card />
+      </div>
+      <div>
+        <h1 className="text-xl text-center text-red-900 font-semibold">Product</h1>
+        <div className="my-5 flex justify-center items-center flex-wrap text-center w-full gap-4">
+          {products?.map((item: IProduct) => (
+            <div key={item?.id} className="p-2 w-[28%] rounded-md shadow-md border border-red-900">
+              <img
+                src={item?.image}
+                alt=""
+                className=" w-full rounded-t-md h-80 bg-gray-500"
+              />
+              <div className="flex flex-col justify-center gap-2">
+                <small className="mt-1">{item?.category}</small>
+                <h2 className="text-md font-semibold">{item?.title}</h2>
+                <h1 className="text-3xl font-semibold text-red-900">${item?.price}</h1>
+                <button
+                  type="button"
+                  className="flex items-center justify-center w-full p-3 font-semibold tracki rounded-md bg-red-900 text-gray-200"
+                >
+                  Add to cart
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
