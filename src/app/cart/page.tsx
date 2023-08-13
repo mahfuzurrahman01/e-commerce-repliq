@@ -9,11 +9,15 @@ const page = () => {
   const [cartItem, setCartItem] = useState([]);
   const [removed, setRemoved] = useState(true);
   const [total, setTotal] = useState(0);
-  const phone: any = localStorage.getItem("phone");
+  let phone;
+  if (typeof window !== "undefined") {
+    // Access localStorage here
+    phone = localStorage.getItem("phone");
+  }
   // fetching all cart item
   const fetchCartItem = async (phone: number | string) => {
     const response = await axios.get(
-      `http://localhost:5000/getOrder?user=${phone}`
+      `https://replic-server.vercel.app/getOrder?user=${phone}`
     );
     if (response?.data?.ok) {
       setCartItem(response?.data?.data);
@@ -25,22 +29,25 @@ const page = () => {
     }
   };
   useEffect(() => {
-    console.log("first");
-    
+    let phoneNumber;
+    if (typeof window !== "undefined") {
+      // Access localStorage here
+      phoneNumber = localStorage.getItem("phone");
+    }
+
     // getting all cart item for this logged in user
-    const phoneNumber = localStorage.getItem("phone");
 
     if (phoneNumber) {
       const cleanedPhoneNumber = phoneNumber.replace(/["']/g, "");
 
       fetchCartItem(cleanedPhoneNumber);
     }
-  }, [removed,setRemoved]);
+  }, [removed, setRemoved]);
   // remove item from cart
   const removeHandle = async (id: string) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/delete?id=${id}`
+        `https://replic-server.vercel.app/delete?id=${id}`
       );
       if (response?.data?.ok) {
         successToast("Successfully remove item");

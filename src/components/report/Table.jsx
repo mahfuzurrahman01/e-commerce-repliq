@@ -6,7 +6,7 @@ const Table = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/products?limit=10"
+          "https://replic-server.vercel.app/products?limit=10"
         );
         console.log(response);
         if (response?.data.length > 0) {

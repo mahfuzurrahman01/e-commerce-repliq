@@ -2,25 +2,30 @@
 "use client";
 /* eslint-disable react/no-unescaped-entities */
 import successToast from "@/components/shared/toast/Success";
+import {useState,useEffect} from 'react'
 import errorToast from "@/components/shared/toast/error";
 import { motion } from "framer-motion";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+
 const page = () => {
-    const router = useRouter()
+
+  const [loggedIn, setLoggedIn] = useState(false);
   const saveUserOnDb = async (phone: number, password: string | number) => {
     try {
-      const response = await axios.post("http://localhost:5000/register", {
-        phone,
-        password,
-      });
+      const response = await axios.post(
+        "https://replic-server.vercel.app/register",
+        {
+          phone,
+          password,
+        }
+      );
       console.log(response);
       if (response?.data?.ok) {
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("phone", JSON.stringify(phone));
         successToast("Successfully registered");
-         router.push('/')
+        setLoggedIn(!loggedIn);
       } else {
         errorToast(`${response?.data?.message}`);
       }
@@ -28,6 +33,7 @@ const page = () => {
       console.log(error);
     }
   };
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
     const phone = e.target.phone.value;

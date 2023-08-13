@@ -13,7 +13,7 @@ const page = () => {
   const fetchProducts = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/products?limit=20"
+        "https://replic-server.vercel.app/products?limit=20"
       );
       console.log(response);
       if (response?.data.length > 0) {
@@ -30,11 +30,16 @@ const page = () => {
   // add to cart function
   const addToCart = async (item: IProduct) => {
     try {
-      const phoneNumber = localStorage.getItem("phone");
+     
       
+      let phoneNumber;
+      if (typeof window !== "undefined") {
+        // Access localStorage here
+        phoneNumber = localStorage.getItem("phone");
+      }
       if (phoneNumber) {
-        const cleanedPhoneNumber = phoneNumber.replace(/["']/g, ''); // Remove all single and double quotes
-        
+        const cleanedPhoneNumber = phoneNumber.replace(/["']/g, ""); // Remove all single and double quotes
+
         const body = {
           phone: cleanedPhoneNumber,
           name: item.title,
@@ -43,12 +48,12 @@ const page = () => {
           image: item?.image,
         };
         console.log(body);
-  
+
         const response = await axios.post(
-          "http://localhost:5000/addProduct",
+          "https://replic-server.vercel.app/addProduct",
           body
         );
-  
+
         console.log(response);
         if (response?.data?.ok) {
           successToast("Successfully added to cart");
@@ -60,7 +65,7 @@ const page = () => {
       console.log("Error adding to cart:", error);
     }
   };
-  
+
   return (
     <div>
       <h1 className="text-xl text-center text-red-900 font-semibold uppercase">

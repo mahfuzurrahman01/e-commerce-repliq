@@ -1,36 +1,44 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
+import { useState, useEffect } from "react";
 import successToast from "@/components/shared/toast/Success";
 import errorToast from "@/components/shared/toast/error";
 /* eslint-disable react/no-unescaped-entities */
 import { motion } from "framer-motion";
 import Link from "next/link";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+
+
 const page = () => {
-  const router = useRouter()
+  let isLoggedIn: any;
+    if (typeof window !== "undefined") {
+      // Access localStorage here
+      isLoggedIn = localStorage.getItem("isLoggedIn");
+    }
+  const [loggedIn, setLoggedIn] = useState(false);
   const userLoggedIn = async (phone: number, password: string | number) => {
     try {
-      const response = await axios.post("http://localhost:5000/login", {
-        phone,
-        password,
-      });
+      const response = await axios.post(
+        "https://replic-server.vercel.app/login",
+        {
+          phone,
+          password,
+        }
+      );
       console.log(response);
       if (response?.data?.ok) {
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("phone", JSON.stringify(phone));
         successToast("Successfully logged in");
-       
-        document.location.reload()
-        router.push("/");
-        
+        setLoggedIn(!loggedIn);
       } else {
-        errorToast('Incorrect phone or password');
+        errorToast("Incorrect phone or password");
       }
     } catch (error) {
       console.log(error);
     }
   };
+  
   const handleSubmit = (e: any) => {
     e.preventDefault();
     const phone = e.target.phone.value;
