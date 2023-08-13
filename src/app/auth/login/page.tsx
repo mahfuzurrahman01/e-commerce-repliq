@@ -1,10 +1,36 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import successToast from "@/components/shared/toast/Success";
 import errorToast from "@/components/shared/toast/error";
 /* eslint-disable react/no-unescaped-entities */
 import { motion } from "framer-motion";
 import Link from "next/link";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 const page = () => {
+  const router = useRouter()
+  const userLoggedIn = async (phone: number, password: string | number) => {
+    try {
+      const response = await axios.post("http://localhost:5000/login", {
+        phone,
+        password,
+      });
+      console.log(response);
+      if (response?.data?.ok) {
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("phone", JSON.stringify(phone));
+        successToast("Successfully logged in");
+       
+        document.location.reload()
+        router.push("/");
+        
+      } else {
+        errorToast('Incorrect phone or password');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleSubmit = (e: any) => {
     e.preventDefault();
     const phone = e.target.phone.value;
@@ -20,18 +46,19 @@ const page = () => {
     }
     if (phone.length === 11) {
       const first2Digit = phone.slice(0, 2);
-      if(first2Digit !== "01"){
-        errorToast('Invalid phone number')
-        return
+      if (first2Digit !== "01") {
+        errorToast("Invalid phone number");
+        return;
       }
     }
     if (password === "" || password === undefined) {
       errorToast("Password is required");
-      return
+      return;
     }
-    console.log(phone,password);
-    
+    // calling the loggedin function for check if the user is valid or not
+    userLoggedIn(phone, password);
   };
+
   return (
     <div className="my-16 mx-auto">
       <motion.div
@@ -113,10 +140,7 @@ const page = () => {
         </div>
         <p className="text-xs text-center sm:px-6 text-gray-400">
           Don't have an account?
-          <Link
-            href='/auth/register'
-            className="underline text-gray-100"
-          >
+          <Link href="/auth/register" className="underline text-gray-100">
             Sign up
           </Link>
         </p>

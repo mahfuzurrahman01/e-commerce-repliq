@@ -1,10 +1,33 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
+/* eslint-disable react/no-unescaped-entities */
 import successToast from "@/components/shared/toast/Success";
 import errorToast from "@/components/shared/toast/error";
-/* eslint-disable react/no-unescaped-entities */
 import { motion } from "framer-motion";
+import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 const page = () => {
+    const router = useRouter()
+  const saveUserOnDb = async (phone: number, password: string | number) => {
+    try {
+      const response = await axios.post("http://localhost:5000/register", {
+        phone,
+        password,
+      });
+      console.log(response);
+      if (response?.data?.ok) {
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("phone", JSON.stringify(phone));
+        successToast("Successfully registered");
+         router.push('/')
+      } else {
+        errorToast(`${response?.data?.message}`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleSubmit = (e: any) => {
     e.preventDefault();
     const phone = e.target.phone.value;
@@ -20,17 +43,17 @@ const page = () => {
     }
     if (phone.length === 11) {
       const first2Digit = phone.slice(0, 2);
-      if(first2Digit !== "01"){
-        errorToast('Invalid phone number')
-        return
+      if (first2Digit !== "01") {
+        errorToast("Invalid phone number");
+        return;
       }
     }
     if (password === "" || password === undefined) {
       errorToast("Password is required");
-      return
+      return;
     }
-    console.log(phone,password);
-    
+    // if phone and pass is ok then it will call the save function
+    saveUserOnDb(phone, password);
   };
   return (
     <div className="my-16 mx-auto">
@@ -65,7 +88,6 @@ const page = () => {
               placeholder="Password"
               className="w-full px-4 py-3 rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:border-violet-400"
             />
-           
           </div>
           <button className="block w-full p-3 text-center rounded-sm text-gray-900 bg-gray-400">
             Sign up
@@ -109,10 +131,7 @@ const page = () => {
         </div>
         <p className="text-xs text-center sm:px-6 text-gray-400">
           Already have an account?
-          <Link
-            href='/auth/login'
-            className="underline text-gray-100"
-          >
+          <Link href="/auth/login" className="underline text-gray-100">
             login
           </Link>
         </p>

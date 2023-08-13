@@ -1,0 +1,27 @@
+[
+    {
+        "id": 1,
+        "item": "Mens Shirt full",
+        "percent": "40"
+    },
+    {
+        "id": 2,
+        "item": "Mens jeans pant",
+        "percent": "70"
+    },
+    {
+        "id": 3,
+        "item": "kids Shirt full",
+        "percent": "80"
+    },
+    {
+        "id": 4,
+        "item": "Ladies Coat",
+        "percent": "60"
+    },
+    {
+        "id": 5,
+        "item": "Kids half pant",
+        "percent": "90"
+    }
+]

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import Link from "next/link";
-import { AiOutlineMenu, AiOutlineUser } from "react-icons/ai";
+import { AiOutlineMenu, AiOutlineShoppingCart, AiOutlineUser } from "react-icons/ai";
 import { HiXMark } from "react-icons/hi2";
 import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -11,7 +11,15 @@ import logo from "../../../../public/logo/logo.png";
 const Navbar = () => {
   const router = useRouter();
   const [menuToggle, setMenuToggle] = useState(false);
-
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
+  if(!isLoggedIn){
+    router.push('/')
+  }
+  // on log out button click
+  const logOutHandle = () =>{
+    localStorage.clear()
+    document.location.reload()
+  }
   return (
     <div className=" flex justify-between md:items-center items-start lg:py-3 py-2  relative">
       {/* logo div  */}
@@ -39,18 +47,36 @@ const Navbar = () => {
         >
           Products
         </Link>
+      
         <Link
           className="hover:text-red-900 text-gray-500 duration-300 hover:font-semibold"
-          href="/blog"
+          href="/admin"
         >
-          About us
+          Admin Dashboard
         </Link>
-        <Link
-          className="hover:text-red-900 bg-red-900 px-2 py-1 hover:bg-white text-gray-200 duration-300 hover:font-semibold"
-          href="/auth/register"
+        {
+          isLoggedIn === 'true' &&  <Link
+          className="hover:text-red-900 text-gray-500 duration-300 hover:font-semibold"
+          href="/cart"
         >
-         Register
+          <AiOutlineShoppingCart className="w-7 h-7"/>
         </Link>
+        }
+        {isLoggedIn === "true" ? (
+          <button
+            className="hover:text-red-900 bg-red-900 px-2 py-1 hover:bg-white text-gray-200 duration-300 hover:font-semibold"
+            onClick={logOutHandle}
+          >
+            Logout
+          </button>
+        ) : (
+          <Link
+            className="hover:text-red-900 bg-red-900 px-2 py-1 hover:bg-white text-gray-200 duration-300 hover:font-semibold"
+            href="/auth/register"
+          >
+            Register
+          </Link>
+        )}
       </div>
       {/* navbar tab div for mobile */}
       {!menuToggle ? (
@@ -85,11 +111,11 @@ const Navbar = () => {
           Products
         </Link>
         <Link
-          href="/about"
+          href="/dashboard"
           className="border-b p-1 text-center hover:bg-gray-300 hover:text-red-900 hover:border-none rounded-md duration-300"
           onClick={() => setMenuToggle(false)}
         >
-         About Us
+          Admin dashboard
         </Link>
         <Link
           href="/auth/register"
